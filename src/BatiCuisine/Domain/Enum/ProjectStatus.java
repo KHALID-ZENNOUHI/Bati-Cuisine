@@ -1,5 +1,6 @@
 package BatiCuisine.Domain.Enum;
 
-public enum EtatProjet {
+public enum ProjectStatus {
+    IN_PROGRESS, COMPLETE, SUSPENDED
     
 }
