@@ -2,12 +2,25 @@ package BatiCuisine.Domain.Entity;
 
 import BatiCuisine.Domain.Enum.ProjectStatus;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Project {
     private Double id;
     private String name;
     private Double profitMargin;
     private Double totalCost;
     private ProjectStatus projectStatus;
+    private List<Material> materials;
+
+    public Project(Double id, String name, Double profitMargin, Double totalCost, ProjectStatus projectStatus, List<Material> materials) {
+        this.id = id;
+        this.name = name;
+        this.profitMargin = profitMargin;
+        this.totalCost = totalCost;
+        this.projectStatus = projectStatus;
+        this.materials = materials;
+    }
 
     public Project() {
     }
@@ -52,13 +65,26 @@ public class Project {
         this.projectStatus = projectStatus;
     }
 
+    public List<Material> getMaterials() {
+        return materials;
+    }
+
+    public void setMaterials(Material material) {
+        if (materials == null) {
+            materials = new ArrayList<>();
+        }
+        materials.add(material);
+    }
+
     @Override
     public String toString() {
         return "Project{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", profitMargin=" + profitMargin +
                 ", totalCost=" + totalCost +
                 ", projectStatus=" + projectStatus +
+                ", materials=" + materials +
                 '}';
     }
 }
