@@ -1,11 +1,15 @@
 package BatiCuisine.Domain.Entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Client {
     private Double id;
     private String name;
     private String address;
     private String phone;
     private Boolean isProfessional;
+    private List<Project> projects;
 
     public Client() {
     }
@@ -50,6 +54,18 @@ public class Client {
         isProfessional = professional;
     }
 
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Project project) {
+        if (projects ==  null) {
+            projects = new ArrayList<>();
+        }
+        projects.add(project);
+
+    }
+
     @Override
     public String toString() {
         return "Client{" +
@@ -58,6 +74,7 @@ public class Client {
                 ", address='" + address + '\'' +
                 ", phone='" + phone + '\'' +
                 ", isProfessional=" + isProfessional +
+                ", projects=" + projects +
                 '}';
     }
 }
