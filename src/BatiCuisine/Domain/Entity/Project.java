@@ -6,30 +6,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Project {
-    private Double id;
+    private int id;
     private String name;
     private Double profitMargin;
     private Double totalCost;
     private ProjectStatus projectStatus;
+    private int clientId;
     private List<Material> materials;
 
-    public Project(Double id, String name, Double profitMargin, Double totalCost, ProjectStatus projectStatus, List<Material> materials) {
+    public Project(int id, String name, Double profitMargin, Double totalCost, ProjectStatus projectStatus, int clientId, List<Material> materials) {
         this.id = id;
         this.name = name;
         this.profitMargin = profitMargin;
         this.totalCost = totalCost;
         this.projectStatus = projectStatus;
+        this.clientId = clientId;
         this.materials = materials;
     }
 
     public Project() {
     }
 
-    public Double getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Double id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -74,6 +76,14 @@ public class Project {
             materials = new ArrayList<>();
         }
         materials.add(material);
+    }
+
+    public int getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
     }
 
     @Override
