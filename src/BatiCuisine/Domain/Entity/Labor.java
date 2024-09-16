@@ -5,8 +5,14 @@ public class Labor extends Component{
     private Double hoursWorked;
     private  Double workerProductivity;
 
-    public Labor(Double id, String name, Double unitCost, Double quantity, String componentType, Double VATRate, Double hourlyRate, Double hoursWorked, Double workerProductivity) {
-        super(id, name, unitCost, quantity, componentType, VATRate);
+    public Labor(int id, String name, Double unitCost, Double quantity, String componentType, Double VATRate, int projectId, Double hourlyRate, Double hoursWorked, Double workerProductivity) {
+        super(id, name, unitCost, quantity, componentType, VATRate, projectId);
+        this.hourlyRate = hourlyRate;
+        this.hoursWorked = hoursWorked;
+        this.workerProductivity = workerProductivity;
+    }
+
+    public Labor(Double hourlyRate, Double hoursWorked, Double workerProductivity) {
         this.hourlyRate = hourlyRate;
         this.hoursWorked = hoursWorked;
         this.workerProductivity = workerProductivity;
