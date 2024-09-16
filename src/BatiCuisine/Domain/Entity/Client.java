@@ -4,21 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Client {
-    private Double id;
+    private int id;
     private String name;
     private String address;
     private String phone;
     private Boolean isProfessional;
     private List<Project> projects;
 
+    public Client(int id, String name, String address, String phone, Boolean isProfessional, List<Project> projects) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+        this.isProfessional = isProfessional;
+        this.projects = projects;
+    }
+
     public Client() {
     }
 
-    public Double getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Double id) {
+    public void setId(int id) {
         this.id = id;
     }
 
