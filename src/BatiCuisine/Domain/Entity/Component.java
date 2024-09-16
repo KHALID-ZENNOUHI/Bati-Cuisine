@@ -1,20 +1,22 @@
 package BatiCuisine.Domain.Entity;
 
 public abstract class Component {
-    private Double id;
+    private int id;
     private String name;
     private Double unitCost;
     private Double quantity;
     private String componentType;
     private Double VATRate;
+    private int projectId;
 
-    public Component(Double id, String name, Double unitCost, Double quantity, String componentType, Double VATRate) {
+    public Component(int id, String name, Double unitCost, Double quantity, String componentType, Double VATRate, int projectId) {
         this.id = id;
         this.name = name;
         this.unitCost = unitCost;
         this.quantity = quantity;
         this.componentType = componentType;
         this.VATRate = VATRate;
+        this.projectId = projectId;
     }
 
     public Component() {
@@ -22,11 +24,11 @@ public abstract class Component {
     }
 
 
-    public Double getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Double id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -68,6 +70,14 @@ public abstract class Component {
 
     public void setVATRate(Double VATRate) {
         this.VATRate = VATRate;
+    }
+
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
     public abstract Double calculateCost();
