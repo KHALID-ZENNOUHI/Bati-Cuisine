@@ -3,14 +3,14 @@ package BatiCuisine.Domain.Entity;
 import java.time.LocalDate;
 
 public class Quote {
-    private Double id;
+    private int id;
     private Double estimatedAmount;
     private LocalDate issueDate;
     private LocalDate validityDate;
     private Boolean accepted;
-    private Double projectId;
+    private int projectId;
 
-    public Quote(Double id, Double estimatedAmount, LocalDate issueDate, LocalDate validityDate, Boolean accepted, Double projectId) {
+    public Quote(int id, Double estimatedAmount, LocalDate issueDate, LocalDate validityDate, Boolean accepted, int projectId) {
         this.id = id;
         this.estimatedAmount = estimatedAmount;
         this.issueDate = issueDate;
@@ -22,11 +22,11 @@ public class Quote {
     public Quote() {
     }
 
-    public Double getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Double id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -62,11 +62,11 @@ public class Quote {
         this.accepted = accepted;
     }
 
-    public Double getProjectId() {
+    public int getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(Double projectId) {
+    public void setProjectId(int projectId) {
         this.projectId = projectId;
     }
 
