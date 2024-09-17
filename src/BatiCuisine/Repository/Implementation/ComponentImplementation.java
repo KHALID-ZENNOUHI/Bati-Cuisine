@@ -24,7 +24,7 @@ public class ComponentImplementation implements ComponentInterface {
 
     @Override
     public int save(Component component) {
-        String query = "INSERT INTO component (name, component_type, VAT_rate, project_id) VALUES (?, ?::component_type, ?, ?)";
+        String query = "INSERT INTO component (name, component_type, vat_rate, project_id) VALUES (?, ?::component_type, ?, ?)";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, component.getName());
@@ -87,7 +87,7 @@ public class ComponentImplementation implements ComponentInterface {
 
     @Override
     public int update (Component component) {
-        String query = "UPDATE component SET name = ?, component_type = ?::component_type, VAT_rate = ?, project_id = ? WHERE id = ?";
+        String query = "UPDATE component SET name = ?, component_type = ?::component_type, vat_rate = ?, project_id = ? WHERE id = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, component.getName());
@@ -146,7 +146,7 @@ public class ComponentImplementation implements ComponentInterface {
 
     @Override
     public List<Component> findAll() {
-        String query = "SELECT c*, m*, l* FROM component c LEFT JOIN material m ON c.id = m.id LEFT JOIN labor l ON c.id = l.id";
+        String query = "SELECT c.*, m.*, l.* FROM component c LEFT JOIN material m ON c.id = m.id LEFT JOIN labor l ON c.id = l.id";
         List<Component> components = new ArrayList<>();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -178,7 +178,7 @@ public class ComponentImplementation implements ComponentInterface {
 
     @Override
     public Optional<Component> findById(int id) {
-        String query = "SELECT c*, m*, l* FROM component c LEFT JOIN material m ON c.id = m.id LEFT JOIN labor l ON c.id = l.id WHERE c.id = ?";
+        String query = "SELECT c.*, m.*, l.* FROM component c LEFT JOIN material m ON c.id = m.id LEFT JOIN labor l ON c.id = l.id WHERE c.id = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, id);
