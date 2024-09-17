@@ -11,13 +11,12 @@ public class Client {
     private Boolean isProfessional;
     private List<Project> projects;
 
-    public Client(int id, String name, String address, String phone, Boolean isProfessional, List<Project> projects) {
+    public Client(int id, String name, String address, String phone, Boolean isProfessional) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.phone = phone;
         this.isProfessional = isProfessional;
-        this.projects = projects;
     }
 
     public Client() {
