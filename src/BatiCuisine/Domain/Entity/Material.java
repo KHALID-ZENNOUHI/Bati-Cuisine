@@ -1,16 +1,24 @@
 package BatiCuisine.Domain.Entity;
 
+import BatiCuisine.Domain.Enum.ComponentType;
+
 public class Material extends Component{
+    private Double unitCost;
+    private Double quantity;
     private Double transportCost;
     private Double qualityCoefficient;
 
-    public Material(int id, String name, Double unitCost, Double quantity, String componentType, Double VATRate, int projectId, Double transportCost, Double qualityCoefficient) {
-        super(id, name, unitCost, quantity, componentType, VATRate, projectId);
+    public Material(int id, String name, ComponentType componentType, Double VATRate, int projectId, Double unitCost, Double quantity, Double transportCost, Double qualityCoefficient) {
+        super(id, name, componentType, VATRate, projectId);
+        this.unitCost = unitCost;
+        this.quantity = quantity;
         this.transportCost = transportCost;
         this.qualityCoefficient = qualityCoefficient;
     }
 
-    public Material(Double transportCost, Double qualityCoefficient) {
+    public Material(Double unitCost, Double quantity, Double transportCost, Double qualityCoefficient) {
+        this.unitCost = unitCost;
+        this.quantity = quantity;
         this.transportCost = transportCost;
         this.qualityCoefficient = qualityCoefficient;
     }
@@ -35,6 +43,22 @@ public class Material extends Component{
         this.qualityCoefficient = qualityCoefficient;
     }
 
+    public Double getUnitCost() {
+        return unitCost;
+    }
+
+    public void setUnitCost(Double unitCost) {
+        this.unitCost = unitCost;
+    }
+
+    public Double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Double quantity) {
+        this.quantity = quantity;
+    }
+
     public Double calculateCost() {
         return null;
     }
@@ -44,6 +68,8 @@ public class Material extends Component{
         return "Material{" +
                 "transportCost=" + transportCost +
                 ", qualityCoefficient=" + qualityCoefficient +
+                ", unitCost=" + unitCost +
+                ", quantity=" + quantity +
                 '}';
     }
 }
