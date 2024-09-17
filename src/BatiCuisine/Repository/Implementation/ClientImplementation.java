@@ -24,7 +24,7 @@ public class ClientImplementation implements ClientInterface {
 
     @Override
     public Client save(Client client) {
-        String query = "INSERT INTO client (name, address, phone, isProfessional) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO client (name, address, phone, is_professional) VALUES (?, ?, ?, ?)";
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = connection.prepareStatement(query);
@@ -86,7 +86,7 @@ public class ClientImplementation implements ClientInterface {
                         resultSet.getString("name"),
                         resultSet.getString("address"),
                         resultSet.getString("phone"),
-                        resultSet.getBoolean("isProfessional")
+                        resultSet.getBoolean("is_professional")
                 ));
             }
             return Optional.empty();
@@ -109,7 +109,7 @@ public class ClientImplementation implements ClientInterface {
                         resultSet.getString("name"),
                         resultSet.getString("address"),
                         resultSet.getString("phone"),
-                        resultSet.getBoolean("isProfessional")
+                        resultSet.getBoolean("is_professional")
                 ));
             }
             return clients;
