@@ -94,8 +94,8 @@ public class ProjectImplementation implements ProjectInterface {
         }
         } catch (SQLException e) {
             e.printStackTrace();
-            return Optional.empty();
         }
+        return Optional.empty();
     }
 
     @Override
