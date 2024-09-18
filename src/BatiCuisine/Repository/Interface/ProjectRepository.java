@@ -8,7 +8,7 @@ import BatiCuisine.Domain.Entity.Project;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProjectInterface {
+public interface ProjectRepository {
     public Project save(Project project);
     public Project update(Project project);
     public Boolean delete(int id);

@@ -7,7 +7,7 @@ import BatiCuisine.Domain.Entity.Material;
 import BatiCuisine.Domain.Entity.Project;
 import BatiCuisine.Domain.Enum.ComponentType;
 import BatiCuisine.Domain.Enum.ProjectStatus;
-import BatiCuisine.Repository.Interface.ProjectInterface;
+import BatiCuisine.Repository.Interface.ProjectRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ProjectImplementation implements ProjectInterface {
+public class ProjectRepositoryImpl implements ProjectRepository {
     private Connection connection;
 
-    public ProjectImplementation() throws SQLException {
+    public ProjectRepositoryImpl() throws SQLException {
         this.connection = DataBaseConnection.getInstance().getConnection();
     }
 

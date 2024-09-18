@@ -4,21 +4,17 @@ import BatiCuisine.Config.DataBaseConnection;
 import BatiCuisine.Domain.Entity.Client;
 import BatiCuisine.Domain.Entity.Project;
 import BatiCuisine.Domain.Enum.ProjectStatus;
-import BatiCuisine.Repository.Interface.ClientInterface;
+import BatiCuisine.Repository.Interface.ClientRepository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-public class ClientImplementation implements ClientInterface {
+public class ClientRepositoryImpl implements ClientRepository {
     private Connection connection;
 
-    public ClientImplementation(String table) throws SQLException {
+    public ClientRepositoryImpl() throws SQLException {
         this.connection = DataBaseConnection.getInstance().getConnection();
     }
 
@@ -27,36 +23,44 @@ public class ClientImplementation implements ClientInterface {
         String query = "INSERT INTO client (name, address, phone, is_professional) VALUES (?, ?, ?, ?)";
         PreparedStatement preparedStatement = null;
         try {
-            preparedStatement = connection.prepareStatement(query);
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, client.getName());
             preparedStatement.setString(2, client.getAddress());
             preparedStatement.setString(3, client.getPhone());
             preparedStatement.setBoolean(4, client.getProfessional());
             preparedStatement.executeUpdate();
-            return client;
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if (resultSet.next()) {
+                client.setId(resultSet.getInt(1));
+                return client;
+            }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
-
         }
-
+        return null;
     }
 
     @Override
     public Client update(Client client) {
-        String query = "UPDATE client SET name = ?, address = ?, phone = ?, isProfessional = ? WHERE id = ?";
+        String query = "UPDATE client SET name = ?, address = ?, phone = ?, is_professional = ? WHERE id = ?";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, client.getName());
             preparedStatement.setString(2, client.getAddress());
             preparedStatement.setString(3, client.getPhone());
             preparedStatement.setBoolean(4, client.getProfessional());
             preparedStatement.setInt(5, client.getId());
             preparedStatement.executeUpdate();
-            return client;
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if (resultSet.next()) {
+                client.setId(resultSet.getInt(1));
+                return client;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 
     @Override
@@ -81,13 +85,13 @@ public class ClientImplementation implements ClientInterface {
             preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                return Optional.of(new Client(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("address"),
-                        resultSet.getString("phone"),
-                        resultSet.getBoolean("is_professional")
-                ));
+                int id = resultSet.getInt("id");
+                String address = resultSet.getString("address");
+                String phone = resultSet.getString("phone");
+                Boolean isProfessional = resultSet.getBoolean("is_professional");
+                Client client = new Client(name, address, phone, isProfessional);
+                client.setId(id);
+                return Optional.of(client);
             }
             return Optional.empty();
         } catch (SQLException e) {
@@ -104,13 +108,14 @@ public class ClientImplementation implements ClientInterface {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Client> clients = new ArrayList<>();
             while (resultSet.next()) {
-                clients.add(new Client(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("address"),
-                        resultSet.getString("phone"),
-                        resultSet.getBoolean("is_professional")
-                ));
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                String address = resultSet.getString("address");
+                String phone = resultSet.getString("phone");
+                Boolean isProfessional = resultSet.getBoolean("is_professional");
+                Client client = new Client(name, address, phone, isProfessional);
+                client.setId(id);
+                clients.add(client);
             }
             return clients;
         } catch (SQLException e) {

@@ -2,18 +2,18 @@ package BatiCuisine.Repository.Implementation;
 
 import BatiCuisine.Config.DataBaseConnection;
 import BatiCuisine.Domain.Entity.Quote;
-import BatiCuisine.Repository.Interface.QuoteInterface;
+import BatiCuisine.Repository.Interface.QuoteRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class QuoteImplementation implements QuoteInterface {
+public class QuoteRepositoryImpl implements QuoteRepository {
 
     private Connection connection;
 
-    public QuoteImplementation() throws SQLException {
+    public QuoteRepositoryImpl() throws SQLException {
         this.connection = DataBaseConnection.getInstance().getConnection();
     }
 
