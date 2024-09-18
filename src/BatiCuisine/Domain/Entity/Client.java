@@ -11,8 +11,7 @@ public class Client {
     private Boolean isProfessional;
     private List<Project> projects;
 
-    public Client(int id, String name, String address, String phone, Boolean isProfessional) {
-        this.id = id;
+    public Client(String name, String address, String phone, Boolean isProfessional) {
         this.name = name;
         this.address = address;
         this.phone = phone;
@@ -21,6 +20,9 @@ public class Client {
 
     public Client() {
     }
+
+//    public Client(String name, String address, String phoneNumber, Boolean isProfessional) {
+//    }
 
     public int getId() {
         return id;
