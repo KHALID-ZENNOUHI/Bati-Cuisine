@@ -7,11 +7,11 @@ import BatiCuisine.Domain.Entity.Material;
 import java.util.List;
 import java.util.Optional;
 
-public interface ComponentInterface {
-    public int save(Component component);
+public interface ComponentRepository {
+    public Component save(Component component);
     public Labor saveLabor(Labor labor);
     public Material saveMaterial(Material material);
-    public int update(Component component);
+    public Component update(Component component);
     public Labor updateLabor(Labor labor);
     public Material updateMaterial(Material material);
     public Boolean delete(int id);

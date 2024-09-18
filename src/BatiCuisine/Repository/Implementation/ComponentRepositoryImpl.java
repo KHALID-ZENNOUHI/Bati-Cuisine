@@ -5,7 +5,7 @@ import BatiCuisine.Domain.Entity.Component;
 import BatiCuisine.Domain.Entity.Labor;
 import BatiCuisine.Domain.Entity.Material;
 import BatiCuisine.Domain.Enum.ComponentType;
-import BatiCuisine.Repository.Interface.ComponentInterface;
+import BatiCuisine.Repository.Interface.ComponentRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,133 +15,106 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ComponentImplementation implements ComponentInterface {
-    private Connection connection;
+public class ComponentRepositoryImpl implements ComponentRepository {
+    private final Connection connection;
 
-    public ComponentImplementation() throws SQLException {
+    public ComponentRepositoryImpl() throws SQLException {
         this.connection = DataBaseConnection.getInstance().getConnection();
     }
 
     @Override
-    public int save(Component component) {
-        String query = "INSERT INTO component (name, component_type, vat_rate, project_id) VALUES (?, ?::component_type, ?, ?)";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, component.getName());
-            preparedStatement.setObject(2, component.getComponentType().name());
-            preparedStatement.setDouble(3, component.getVATRate());
-            preparedStatement.setInt(4, component.getProjectId());
-            preparedStatement.executeUpdate();
-            ResultSet resultSet = preparedStatement.getGeneratedKeys();
-            if (resultSet.next()) {
-                component.setId(resultSet.getInt(1));
-            }
-            return component.getId();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
-        }
+    public Component save(Component component) {
+        if (component instanceof Labor) saveLabor((Labor) component);
+        else saveMaterial((Material) component);
+        return component;
     }
 
     @Override
     public Labor saveLabor (Labor labor) {
-        int id = save(labor);
-        if (id != -1) {
-            String query = "INSERT INTO labor (id, hourly_rate, hours_worked, worker_productivity) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO labor (name, component_type, vat_rate, project_id, hourly_rate, hours_worked, worker_productivity) VALUES (?, ?::component_type, ?, ?, ?, ?, ?)";
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
-                preparedStatement.setInt(1, id);
-                preparedStatement.setDouble(2, labor.getHourlyRate());
-                preparedStatement.setDouble(3, labor.getHoursWorked());
-                preparedStatement.setDouble(4, labor.getWorkerProductivity());
+                preparedStatement.setString(1, labor.getName());
+                preparedStatement.setObject(2, labor.getComponentType().name());
+                preparedStatement.setDouble(3, labor.getVATRate());
+                preparedStatement.setInt(4, labor.getProjectId());
+                preparedStatement.setDouble(5, labor.getHourlyRate());
+                preparedStatement.setDouble(6, labor.getHoursWorked());
+                preparedStatement.setDouble(7, labor.getWorkerProductivity());
                 preparedStatement.executeUpdate();
                 return labor;
             } catch (SQLException e) {
                 e.printStackTrace();
                 return null;
             }
-        }
-        return null;
+
     }
 
     @Override
     public Material saveMaterial (Material material) {
-        int id = save(material);
-        if (id != -1) {
-            String query = "INSERT INTO material (id, unit_price, quantity) VALUES (?, ?, ?)";
+
+            String query = "INSERT INTO material (name, component_type, vat_rate, project_id, unit_price, quantity) VALUES (?, ?::component_type, ?, ?, ?, ?)";
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
-                preparedStatement.setInt(1, id);
-                preparedStatement.setDouble(2, material.getUnitCost());
-                preparedStatement.setDouble(3, material.getQuantity());
+                preparedStatement.setString(1, material.getName());
+                preparedStatement.setObject(2, material.getComponentType().name());
+                preparedStatement.setDouble(3, material.getVATRate());
+                preparedStatement.setInt(4, material.getProjectId());
+                preparedStatement.setDouble(5, material.getUnitCost());
+                preparedStatement.setDouble(6, material.getQuantity());
                 preparedStatement.executeUpdate();
                 return material;
             } catch (SQLException e) {
                 e.printStackTrace();
                 return null;
             }
-        }
-        return null;
     }
 
     @Override
-    public int update (Component component) {
-        String query = "UPDATE component SET name = ?, component_type = ?::component_type, vat_rate = ?, project_id = ? WHERE id = ?";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, component.getName());
-            preparedStatement.setObject(2, component.getComponentType().name());
-            preparedStatement.setDouble(3, component.getVATRate());
-            preparedStatement.setInt(4, component.getProjectId());
-            preparedStatement.setInt(5, component.getId());
-            preparedStatement.executeUpdate();
-            return component.getId();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
-        }
+    public Component update (Component component) {
+        if (component instanceof Labor) updateLabor((Labor) component);
+        else updateMaterial((Material) component);
+        return component;
     }
 
     @Override
     public Labor updateLabor (Labor labor) {
-        int id = update(labor);
-        if (id != -1) {
-            String query = "UPDATE labor SET hourly_rate = ?, hours_worked = ?, worker_productivity = ? WHERE id = ?";
+            String query = "UPDATE labor SET name = ?, component_type = ?::component_type, vat_rate = ?, project_id = ?, hourly_rate = ?, hours_worked = ?, worker_productivity = ? WHERE id = ?";
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
-                preparedStatement.setDouble(1, labor.getHourlyRate());
-                preparedStatement.setDouble(2, labor.getHoursWorked());
-                preparedStatement.setDouble(3, labor.getWorkerProductivity());
-                preparedStatement.setInt(4, id);
+                preparedStatement.setString(1, labor.getName());
+                preparedStatement.setObject(2, labor.getComponentType().name());
+                preparedStatement.setDouble(3, labor.getVATRate());
+                preparedStatement.setInt(4, labor.getProjectId());
+                preparedStatement.setDouble(5, labor.getHourlyRate());
+                preparedStatement.setDouble(6, labor.getHoursWorked());
+                preparedStatement.setDouble(7, labor.getWorkerProductivity());
                 preparedStatement.executeUpdate();
                 return labor;
             } catch (SQLException e) {
                 e.printStackTrace();
                 return null;
             }
-        }
-        return null;
+
     }
 
     @Override
     public Material updateMaterial (Material material) {
-        int id = update(material);
-        if (id != -1) {
-            String query = "UPDATE material SET unit_price = ?, quantity = ? WHERE id = ?";
+            String query = "UPDATE material SET name = ?, component_type = ?::component_type, vat_rate = ?, project_id = ?, unit_price = ?, quantity = ? WHERE id = ?";
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
-                preparedStatement.setDouble(1, material.getUnitCost());
-                preparedStatement.setDouble(2, material.getQuantity());
-                preparedStatement.setInt(3, id);
+                preparedStatement.setString(1, material.getName());
+                preparedStatement.setObject(2, material.getComponentType().name());
+                preparedStatement.setDouble(3, material.getVATRate());
+                preparedStatement.setInt(4, material.getProjectId());
+                preparedStatement.setDouble(5, material.getUnitCost());
+                preparedStatement.setDouble(6, material.getQuantity());
                 preparedStatement.executeUpdate();
                 return material;
             } catch (SQLException e) {
                 e.printStackTrace();
                 return null;
             }
-        }
-        return null;
     }
 
     @Override
