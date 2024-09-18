@@ -49,7 +49,7 @@ public class Labor extends Component{
     }
 
     public Double calculateCost() {
-        return null;
+        return hourlyRate * hoursWorked * workerProductivity * (1 + getVATRate() / 100);
     }
 
     @Override

@@ -60,7 +60,7 @@ public class Material extends Component{
     }
 
     public Double calculateCost() {
-        return null;
+        return unitCost * quantity * qualityCoefficient * (1 + getVATRate() / 100);
     }
 
     @Override
