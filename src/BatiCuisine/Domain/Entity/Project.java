@@ -12,16 +12,16 @@ public class Project {
     private Double totalCost;
     private ProjectStatus projectStatus;
     private int clientId;
-    private List<Material> materials;
+    private List<Component> components;
 
-    public Project(int id, String name, Double profitMargin, Double totalCost, ProjectStatus projectStatus, int clientId, List<Material> materials) {
+    public Project(int id, String name, Double profitMargin, Double totalCost, ProjectStatus projectStatus, int clientId) {
         this.id = id;
         this.name = name;
         this.profitMargin = profitMargin;
         this.totalCost = totalCost;
         this.projectStatus = projectStatus;
         this.clientId = clientId;
-        this.materials = materials;
+
     }
 
     public Project() {
@@ -67,15 +67,15 @@ public class Project {
         this.projectStatus = projectStatus;
     }
 
-    public List<Material> getMaterials() {
-        return materials;
+    public List<Component> getComponents() {
+        return components;
     }
 
-    public void setMaterials(Material material) {
-        if (materials == null) {
-            materials = new ArrayList<>();
+    public void setComponents(Component component) {
+        if (components == null) {
+            components = new ArrayList<>();
         }
-        materials.add(material);
+        components.add(component);
     }
 
     public int getClientId() {
@@ -94,7 +94,8 @@ public class Project {
                 ", profitMargin=" + profitMargin +
                 ", totalCost=" + totalCost +
                 ", projectStatus=" + projectStatus +
-                ", materials=" + materials +
+                ", clientId=" + clientId +
+                ", components=" + components +
                 '}';
     }
 }
