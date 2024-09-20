@@ -1,14 +1,12 @@
 package BatiCuisine.Domain.Entity;
 
-import BatiCuisine.Domain.Enum.ComponentType;
-
 public class Labor extends Component{
     private Double hourlyRate;
     private Double hoursWorked;
     private  Double workerProductivity;
 
-    public Labor(int id, String name, ComponentType componentType, Double VATRate, int projectId, Double hourlyRate, Double hoursWorked, Double workerProductivity) {
-        super(id, name, componentType, VATRate, projectId);
+    public Labor(int id, String name, String componentType, Double VATRate, Project project, Double hourlyRate, Double hoursWorked, Double workerProductivity) {
+        super(id, name, componentType, VATRate, project);
         this.hourlyRate = hourlyRate;
         this.hoursWorked = hoursWorked;
         this.workerProductivity = workerProductivity;

@@ -1,21 +1,19 @@
 package BatiCuisine.Domain.Entity;
 
-import BatiCuisine.Domain.Enum.ComponentType;
-
 public abstract class Component {
     private int id;
     private String name;
-    private ComponentType componentType;
+    private String componentType;
     private Double VATRate;
-    private int projectId;
+    private Project project;
 
 
-    public Component(int id, String name, ComponentType componentType, Double VATRate, int projectId) {
+    public Component(int id, String name, String componentType, Double VATRate, Project project) {
         this.id = id;
         this.name = name;
         this.componentType = componentType;
         this.VATRate = VATRate;
-        this.projectId = projectId;
+        this.project = project;
     }
 
     public Component() {
@@ -39,11 +37,11 @@ public abstract class Component {
         this.name = name;
     }
 
-    public ComponentType getComponentType() {
+    public String getComponentType() {
         return componentType;
     }
 
-    public void setComponentType(ComponentType componentType) {
+    public void setComponentType(String componentType) {
         this.componentType = componentType;
     }
 
@@ -55,12 +53,12 @@ public abstract class Component {
         this.VATRate = VATRate;
     }
 
-    public int getProjectId() {
-        return projectId;
+    public Project getProject() {
+        return project;
     }
 
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     public abstract Double calculateCost();
@@ -72,7 +70,7 @@ public abstract class Component {
                 ", name='" + name + '\'' +
                 ", componentType='" + componentType + '\'' +
                 ", VATRate=" + VATRate +
-                ", projectId=" + projectId +
+                ", project=" + project +
                 '}';
     }
 }

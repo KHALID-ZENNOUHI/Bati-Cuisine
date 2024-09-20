@@ -1,15 +1,13 @@
 package BatiCuisine.Domain.Entity;
 
-import BatiCuisine.Domain.Enum.ComponentType;
-
 public class Material extends Component{
     private Double unitCost;
     private Double quantity;
     private Double transportCost;
     private Double qualityCoefficient;
 
-    public Material(int id, String name, ComponentType componentType, Double VATRate, int projectId, Double unitCost, Double quantity, Double transportCost, Double qualityCoefficient) {
-        super(id, name, componentType, VATRate, projectId);
+    public Material(int id, String name, String componentType, Double VATRate, Project project, Double unitCost, Double quantity, Double transportCost, Double qualityCoefficient) {
+        super(id, name, componentType, VATRate, project);
         this.unitCost = unitCost;
         this.quantity = quantity;
         this.transportCost = transportCost;

@@ -11,17 +11,16 @@ public class Project {
     private Double profitMargin;
     private Double totalCost;
     private ProjectStatus projectStatus;
-    private int clientId;
+    private Client client;
     private List<Component> components;
 
-    public Project(int id, String name, Double profitMargin, Double totalCost, ProjectStatus projectStatus, int clientId) {
+    public Project(int id, String name, Double profitMargin, Double totalCost, ProjectStatus projectStatus, Client client) {
         this.id = id;
         this.name = name;
         this.profitMargin = profitMargin;
         this.totalCost = totalCost;
         this.projectStatus = projectStatus;
-        this.clientId = clientId;
-
+        this.client = client;
     }
 
     public Project() {
@@ -71,19 +70,16 @@ public class Project {
         return components;
     }
 
-    public void setComponents(Component component) {
-        if (components == null) {
-            components = new ArrayList<>();
-        }
-        components.add(component);
+    public void setComponents(List<Component> components) {
+        this.components = components;
     }
 
-    public int getClientId() {
-        return clientId;
+    public Client getClient() {
+        return client;
     }
 
-    public void setClientId(int clientId) {
-        this.clientId = clientId;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     @Override
@@ -94,7 +90,7 @@ public class Project {
                 ", profitMargin=" + profitMargin +
                 ", totalCost=" + totalCost +
                 ", projectStatus=" + projectStatus +
-                ", clientId=" + clientId +
+                ", client=" + client +
                 ", components=" + components +
                 '}';
     }

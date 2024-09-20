@@ -8,15 +8,15 @@ public class Quote {
     private LocalDate issueDate;
     private LocalDate validityDate;
     private Boolean accepted;
-    private int projectId;
+    private Project project;
 
-    public Quote(int id, Double estimatedAmount, LocalDate issueDate, LocalDate validityDate, Boolean accepted, int projectId) {
+    public Quote(int id, Double estimatedAmount, LocalDate issueDate, LocalDate validityDate, Boolean accepted, Project project) {
         this.id = id;
         this.estimatedAmount = estimatedAmount;
         this.issueDate = issueDate;
         this.validityDate = validityDate;
         this.accepted = accepted;
-        this.projectId = projectId;
+        this.project = project;
     }
 
     public Quote() {
@@ -62,12 +62,12 @@ public class Quote {
         this.accepted = accepted;
     }
 
-    public int getProjectId() {
-        return projectId;
+    public Project getProject() {
+        return project;
     }
 
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class Quote {
                 ", issueDate=" + issueDate +
                 ", validityDate=" + validityDate +
                 ", accepted=" + accepted +
-                ", projectId=" + projectId +
+                ", project=" + project +
                 '}';
     }
 }
