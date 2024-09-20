@@ -19,64 +19,67 @@ public class ClientManager {
         this.scanner = new Scanner(System.in);
     }
 
-    public int createClient() {
+    public String createClient() {
         System.out.print("Enter client name: ");
-        String name = scanner.nextLine();
+        String name = this.scanner.nextLine();
         System.out.print("Enter client address: ");
-        String address = scanner.nextLine();
+        String address = this.scanner.nextLine();
         System.out.print("Enter client phone number: ");
-        String phoneNumber = scanner.nextLine();
+        String phoneNumber = this.scanner.nextLine();
         String isPro;
         do {
-           System.out.print("Is the client a professional? (y/n)");
-           isPro = scanner.nextLine();
-       }while (!isPro.equals("y") && !isPro.equals("n"));
-        Boolean isProfessional = isPro.equals("y");
+            System.out.print("Is the client a professional (y/n)? ");
+            isPro = scanner.nextLine();
+        } while (!isPro.equalsIgnoreCase("y") && !isPro.equalsIgnoreCase("n"));
+
+        Boolean isProfessional = isPro.equalsIgnoreCase("y");
         Client client = new Client(name, address, phoneNumber, isProfessional);
         Client savedClient = clientService.save(client);
-        if (savedClient == null) {
+        if (savedClient != null) {
             System.out.println("Client created successfully with name: " + savedClient.getName());
-            return savedClient.getId();
+            return savedClient.getName();
         } else {
             System.out.println("Error creating client.");
-            return -1;
+            return null;
         }
 
     }
 
-    public int searchClient() {
+    public String searchClient() {
         System.out.print("Enter client name: ");
-        String name = scanner.nextLine();
-        Client client = clientService.findByName(name).orElse(null);
-        if (client != null) {
+        String name = this.scanner.nextLine();
+        Optional<Client> clientOptional = clientService.findByName(name);
+        if (clientOptional.isPresent()) {
+            Client client = clientOptional.get();
             System.out.println("Client found!\n" +
                     "Name: " + client.getName() + "\n" +
                     "Address: " + client.getAddress() + "\n" +
                     "Phone: " + client.getPhone());
-            return client.getId();
+            return client.getName();
         } else {
             System.out.println("Client not found.");
-            return -1;
+            return null;
         }
     }
 
     public void updateClient () {
         System.out.print("Enter client name you want to update there info: ");
-        String name = scanner.nextLine();
+        String name = this.scanner.nextLine();
         Client client = clientService.findByName(name).orElse(null);
         if (client != null) {
             System.out.print("Enter the new name of client: ");
-            String newName =  scanner.nextLine();
+            String newName =  this.scanner.nextLine();
             System.out.print("Enter the new client address: ");
-            String address = scanner.nextLine();
+            String address = this.scanner.nextLine();
             System.out.print("Enter the new client phone number: ");
-            String phoneNumber = scanner.nextLine();
+            String phoneNumber = this.scanner.nextLine();
             String isPro;
             do {
-                System.out.print("Is the client a professional? (y/n)");
+                System.out.print("Is the client a professional (y/n)? ");
                 isPro = scanner.nextLine();
-            }while (!isPro.equals("y") && !isPro.equals("n"));
-            Boolean isProfessional = isPro.equals("y");
+            } while (!isPro.equalsIgnoreCase("y") && !isPro.equalsIgnoreCase("n"));
+
+            Boolean isProfessional = isPro.equalsIgnoreCase("y");
             Client newClient = new Client(name, address, phoneNumber, isProfessional);
             clientService.update(newClient);
             System.out.println("Client created successfully!");
@@ -85,7 +88,7 @@ public class ClientManager {
 
     public void deleteClient () {
         System.out.print("Enter the name of the client you want to delete : ");
-        String name = scanner.nextLine();
+        String name = this.scanner.nextLine();
         Optional<Client> clientOptional = clientService.findByName(name);
         if (clientOptional.isPresent()) {
             Client client = clientOptional.get();
@@ -100,7 +103,7 @@ public class ClientManager {
 
     public void getClientProjects() {
         System.out.println("Enter the name of the client you want there project: ");
-        String name  = scanner.nextLine();
+        String name  = this.scanner.nextLine();
         Optional<Client> clientOptional = clientService.findByName(name);
         if (clientOptional.isPresent()){
             Client  client = clientOptional.get();
