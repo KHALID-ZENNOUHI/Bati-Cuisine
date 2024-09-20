@@ -32,6 +32,11 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    public Optional<Client> findById(int id) {
+        return this.clientRepository.findById(id);
+    }
+
+    @Override
     public Optional<Client> findByName(String name) {
         return this.clientRepository.findByName(name);
     }

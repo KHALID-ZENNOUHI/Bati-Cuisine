@@ -53,10 +53,7 @@ public class ClientRepositoryImpl implements ClientRepository {
             preparedStatement.setInt(5, client.getId());
             preparedStatement.executeUpdate();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
-            if (resultSet.next()) {
-                client.setId(resultSet.getInt(1));
-                return client;
-            }
+            return client;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -125,6 +122,29 @@ public class ClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
+    public Optional<Client> findById(int id) {
+        String query = "SELECT * FROM client WHERE id = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                String name = resultSet.getString("name");
+                String address = resultSet.getString("address");
+                String phone = resultSet.getString("phone");
+                Boolean isProfessional = resultSet.getBoolean("is_professional");
+                Client client = new Client(name, address, phone, isProfessional);
+                client.setId(id);
+                return Optional.of(client);
+            }
+            return Optional.empty();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public List<Project> getProjects(int id) {
         String query = "SELECT * FROM project WHERE client_id = ?";
         List<Project> projects = new ArrayList<>();
@@ -139,7 +159,8 @@ public class ClientRepositoryImpl implements ClientRepository {
                 project.setProfitMargin(resultSet.getDouble("profit_margin"));
                 project.setTotalCost(resultSet.getDouble("total_cost"));
                 project.setProjectStatus(ProjectStatus.valueOf(resultSet.getString("project_status")));
-                project.setClientId(resultSet.getInt("client_id"));
+                int clientId = resultSet.getInt("client_id");
+                project.setClient(findById(clientId).get());
                 projects.add(project);
             }
             return projects;

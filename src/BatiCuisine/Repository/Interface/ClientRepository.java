@@ -13,4 +13,5 @@ public interface ClientRepository {
     public Optional<Client> findByName(String name);
     public List<Client> findAll();
     public List<Project> getProjects(int id);
+    public Optional<Client> findById(int id);
 }

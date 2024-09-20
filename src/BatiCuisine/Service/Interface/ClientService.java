@@ -13,4 +13,5 @@ public interface ClientService {
     public Optional<Client> findByName(String name);
     public List<Client> findAll();
     public List<Project> clientProjects(int id);
+    public Optional<Client> findById(int id);
 }

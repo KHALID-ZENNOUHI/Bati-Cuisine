@@ -4,8 +4,9 @@ import BatiCuisine.Config.DataBaseConnection;
 import BatiCuisine.Domain.Entity.Component;
 import BatiCuisine.Domain.Entity.Labor;
 import BatiCuisine.Domain.Entity.Material;
-import BatiCuisine.Domain.Enum.ComponentType;
+import BatiCuisine.Domain.Entity.Project;
 import BatiCuisine.Repository.Interface.ComponentRepository;
+import BatiCuisine.Service.Implementation.ProjectServiceImpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,27 +18,22 @@ import java.util.Optional;
 
 public class ComponentRepositoryImpl implements ComponentRepository {
     private final Connection connection;
+    private final ProjectServiceImpl projectService;
 
     public ComponentRepositoryImpl() throws SQLException {
         this.connection = DataBaseConnection.getInstance().getConnection();
-    }
-
-    @Override
-    public Component save(Component component) {
-        if (component instanceof Labor) saveLabor((Labor) component);
-        else saveMaterial((Material) component);
-        return component;
+        this.projectService = new ProjectServiceImpl();
     }
 
     @Override
     public Labor saveLabor (Labor labor) {
-            String query = "INSERT INTO labor (name, component_type, vat_rate, project_id, hourly_rate, hours_worked, worker_productivity) VALUES (?, ?::component_type, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO labor (name, component_type, vat_rate, project_id, hourly_rate, hours_worked, worker_productivity) VALUES (?, ?, ?, ?, ?, ?, ?)";
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1, labor.getName());
-                preparedStatement.setObject(2, labor.getComponentType().name());
+                preparedStatement.setString(2, labor.getComponentType());
                 preparedStatement.setDouble(3, labor.getVATRate());
-                preparedStatement.setInt(4, labor.getProjectId());
+                preparedStatement.setInt(4, labor.getProject().getId());
                 preparedStatement.setDouble(5, labor.getHourlyRate());
                 preparedStatement.setDouble(6, labor.getHoursWorked());
                 preparedStatement.setDouble(7, labor.getWorkerProductivity());
@@ -53,16 +49,22 @@ public class ComponentRepositoryImpl implements ComponentRepository {
     @Override
     public Material saveMaterial (Material material) {
 
-            String query = "INSERT INTO material (name, component_type, vat_rate, project_id, unit_price, quantity) VALUES (?, ?::component_type, ?, ?, ?, ?)";
+            String query = "INSERT INTO material (name, component_type, vat_rate, project_id, unit_cost, quantity, transport_cost, quality_coefficient) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             try {
-                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
                 preparedStatement.setString(1, material.getName());
-                preparedStatement.setObject(2, material.getComponentType().name());
+                preparedStatement.setString(2, material.getComponentType());
                 preparedStatement.setDouble(3, material.getVATRate());
-                preparedStatement.setInt(4, material.getProjectId());
+                preparedStatement.setInt(4, material.getProject().getId());
                 preparedStatement.setDouble(5, material.getUnitCost());
                 preparedStatement.setDouble(6, material.getQuantity());
+                preparedStatement.setDouble(7, material.getTransportCost());
+                preparedStatement.setDouble(8, material.getQualityCoefficient());
                 preparedStatement.executeUpdate();
+                ResultSet resultSet = preparedStatement.getGeneratedKeys();
+                if (resultSet.next()) {
+                    material.setId(resultSet.getInt(1));
+                }
                 return material;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -71,21 +73,14 @@ public class ComponentRepositoryImpl implements ComponentRepository {
     }
 
     @Override
-    public Component update (Component component) {
-        if (component instanceof Labor) updateLabor((Labor) component);
-        else updateMaterial((Material) component);
-        return component;
-    }
-
-    @Override
     public Labor updateLabor (Labor labor) {
-            String query = "UPDATE labor SET name = ?, component_type = ?::component_type, vat_rate = ?, project_id = ?, hourly_rate = ?, hours_worked = ?, worker_productivity = ? WHERE id = ?";
+            String query = "UPDATE labor SET name = ?, component_type = ?, vat_rate = ?, project_id = ?, hourly_rate = ?, hours_worked = ?, worker_productivity = ? WHERE id = ?";
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1, labor.getName());
-                preparedStatement.setObject(2, labor.getComponentType().name());
+                preparedStatement.setString(2, labor.getComponentType());
                 preparedStatement.setDouble(3, labor.getVATRate());
-                preparedStatement.setInt(4, labor.getProjectId());
+                preparedStatement.setInt(4, labor.getProject().getId());
                 preparedStatement.setDouble(5, labor.getHourlyRate());
                 preparedStatement.setDouble(6, labor.getHoursWorked());
                 preparedStatement.setDouble(7, labor.getWorkerProductivity());
@@ -100,13 +95,13 @@ public class ComponentRepositoryImpl implements ComponentRepository {
 
     @Override
     public Material updateMaterial (Material material) {
-            String query = "UPDATE material SET name = ?, component_type = ?::component_type, vat_rate = ?, project_id = ?, unit_price = ?, quantity = ? WHERE id = ?";
+            String query = "UPDATE material SET name = ?, component_type = ?, vat_rate = ?, project_id = ?, unit_cost = ?, quantity = ? WHERE id = ?";
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1, material.getName());
-                preparedStatement.setObject(2, material.getComponentType().name());
+                preparedStatement.setString(2, material.getComponentType());
                 preparedStatement.setDouble(3, material.getVATRate());
-                preparedStatement.setInt(4, material.getProjectId());
+                preparedStatement.setInt(4, material.getProject().getId());
                 preparedStatement.setDouble(5, material.getUnitCost());
                 preparedStatement.setDouble(6, material.getQuantity());
                 preparedStatement.executeUpdate();
@@ -127,20 +122,21 @@ public class ComponentRepositoryImpl implements ComponentRepository {
                 while (resultSet.next()) {
                     int id = resultSet.getInt("id");
                     String name = resultSet.getString("name");
-                    ComponentType componentType = ComponentType.valueOf(resultSet.getString("component_type"));
+                    String componentType = resultSet.getString("component_type");
                     Double VATRate = resultSet.getDouble("vat_rate");
                     int projectId = resultSet.getInt("project_id");
-                    if (componentType == ComponentType.LABOR) {
+                    Project project = this.projectService.findById(projectId).get();
+                    if (componentType.equalsIgnoreCase("material")) {
                         Double hourlyRate = resultSet.getDouble("hourly_rate");
                         Double hoursWorked = resultSet.getDouble("hours_worked");
                         Double workerProductivity = resultSet.getDouble("worker_productivity");
-                        components.add(new Labor(id, name, componentType, VATRate, projectId, hourlyRate, hoursWorked, workerProductivity));
+                        components.add(new Labor(id, name, componentType, VATRate, project, hourlyRate, hoursWorked, workerProductivity));
                     } else {
-                        Double unitCost = resultSet.getDouble("unit_price");
+                        Double unitCost = resultSet.getDouble("unit_cost");
                         Double quantity = resultSet.getDouble("quantity");
                         Double transportCost = resultSet.getDouble("transport_cost");
                         Double qualityCoefficient = resultSet.getDouble("quality_coefficient");
-                        components.add(new Material(id, name, componentType, VATRate, projectId, unitCost, quantity, transportCost, qualityCoefficient));
+                        components.add(new Material(id, name, componentType, VATRate, project, unitCost, quantity, transportCost, qualityCoefficient));
                     }
                 }
         } catch (SQLException e) {
@@ -158,20 +154,21 @@ public class ComponentRepositoryImpl implements ComponentRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 String name = resultSet.getString("name");
-                ComponentType componentType = ComponentType.valueOf(resultSet.getString("component_type"));
+                String componentType = resultSet.getString("component_type");
                 Double VATRate = resultSet.getDouble("vat_rate");
                 int projectId = resultSet.getInt("project_id");
-                if (componentType == ComponentType.LABOR) {
+                Project project = this.projectService.findById(projectId).get();
+                if (componentType.equalsIgnoreCase("labor")) {
                     Double hourlyRate = resultSet.getDouble("hourly_rate");
                     Double hoursWorked = resultSet.getDouble("hours_worked");
                     Double workerProductivity = resultSet.getDouble("worker_productivity");
-                    return Optional.of(new Labor(id, name, componentType, VATRate, projectId, hourlyRate, hoursWorked, workerProductivity));
+                    return Optional.of(new Labor(id, name, componentType, VATRate, project, hourlyRate, hoursWorked, workerProductivity));
                 } else {
-                    Double unitCost = resultSet.getDouble("unit_price");
+                    Double unitCost = resultSet.getDouble("unit_cost");
                     Double quantity = resultSet.getDouble("quantity");
                     Double transportCost = resultSet.getDouble("transport_cost");
                     Double qualityCoefficient = resultSet.getDouble("quality_coefficient");
-                    return Optional.of(new Material(id, name, componentType, VATRate, projectId, unitCost, quantity, transportCost, qualityCoefficient));
+                    return Optional.of(new Material(id, name, componentType, VATRate, project, unitCost, quantity, transportCost, qualityCoefficient));
                 }
             }
         } catch (SQLException e) {

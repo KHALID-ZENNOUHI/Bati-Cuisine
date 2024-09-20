@@ -1,18 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="b9fc9c1c-f4ba-4326-83bc-52dfefb95033" name="Changes" comment="" />
+    <list default="true" id="b9fc9c1c-f4ba-4326-83bc-52dfefb95033" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/BatiCuisine/Core/ComponentManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bati-Cuisine.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Bati-Cuisine.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Core/ClientManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Core/ClientManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Core/ProjectManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Core/ProjectManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Domain/Entity/Component.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Domain/Entity/Component.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Domain/Entity/Labor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Domain/Entity/Labor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Domain/Entity/Material.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Domain/Entity/Material.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Domain/Entity/Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Domain/Entity/Project.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Domain/Entity/Quote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Domain/Entity/Quote.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Domain/Enum/ComponentType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Domain/Enum/ProjectStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Domain/Enum/ProjectStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Repository/Implementation/ClientRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Repository/Implementation/ClientRepositoryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Repository/Implementation/ComponentRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Repository/Implementation/ComponentRepositoryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Repository/Implementation/ProjectRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Repository/Implementation/ProjectRepositoryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Repository/Implementation/QuoteRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Repository/Implementation/QuoteRepositoryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Repository/Interface/ClientRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Repository/Interface/ClientRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Repository/Interface/ComponentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Repository/Interface/ComponentRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Service/Implementation/ClientServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Service/Implementation/ClientServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Service/Implementation/ComponentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Service/Implementation/ComponentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Service/Interface/ClientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Service/Interface/ClientService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BatiCuisine/Service/Interface/ComponentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BatiCuisine/Service/Interface/ComponentService.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="JsbtTreeLayoutManager">
+    <layout place="tools.popupGrunt">
+      <scroll-view-position x="0" y="0" />
+    </layout>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2m4IRm2X3a3drSUT2OY3QYkNfB6" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -21,14 +64,34 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Youcode/IdeaProjects/Bati-Cuisine",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "onboarding.tips.debug.path": "C:/Users/Youcode/IdeaProjects/Bati-Cuisine/src/Main.java",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="ExtractSuperBase.RECENT_KEYS">
+      <recent name="BatiCuisine.Repository.Implementation" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -45,22 +108,23 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1726329419890</updated>
-      <workItem from="1726329420986" duration="4000" />
+      <workItem from="1726329420986" duration="2068000" />
+      <workItem from="1726342590796" duration="5487000" />
+      <workItem from="1726407044335" duration="1378000" />
+      <workItem from="1726408549565" duration="1543000" />
+      <workItem from="1726477384577" duration="20263000" />
+      <workItem from="1726521092495" duration="6638000" />
+      <workItem from="1726568263304" duration="27882000" />
+      <workItem from="1726647178423" duration="19888000" />
+      <workItem from="1726733594541" duration="452000" />
+      <workItem from="1726752029665" duration="9386000" />
+      <workItem from="1726765835178" duration="10601000" />
+      <workItem from="1726820785899" duration="18568000" />
+      <workItem from="1726865992906" duration="10000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Main.java</url>
-          <line>11</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/src/BatiCuisine/Repository/Implementation/ClientImplementation.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/BatiCuisine/Repository/Implementation/ClientRepositoryImpl.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/BatiCuisine/Repository/Implementation/ComponentRepositoryImpl.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/BatiCuisine/Repository/Implementation/ProjectRepositoryImpl.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/BatiCuisine/Repository/Implementation/QuoteRepositoryImpl.java" dialect="GenericSQL" />
   </component>
 </project>

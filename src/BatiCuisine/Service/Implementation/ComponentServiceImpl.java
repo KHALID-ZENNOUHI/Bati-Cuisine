@@ -17,15 +17,27 @@ public class ComponentServiceImpl implements ComponentService {
         this.componentRepository = new ComponentRepositoryImpl();
     }
 
-   @Override
-   public Component save(Component component) {
-        return this.componentRepository.save(component);
-   }
+    @Override
+    public Labor saveLabor(Labor labor) {
+        return this.componentRepository.saveLabor(labor);
+    }
 
-   @Override
-   public Component update(Component component) {
-        return this.componentRepository.update(component);
-   }
+    @Override
+    public Material saveMaterial(Material material) {
+        return this.componentRepository.saveMaterial(material);
+    }
+
+    @Override
+    public List<Labor> saveAllLabors(List<Labor> labors) {
+        labors.forEach(this.componentRepository::saveLabor);
+        return labors;
+    }
+
+    @Override
+    public List<Material> saveAllMaterials(List<Material> materials) {
+        materials.forEach(this.componentRepository::saveMaterial);
+        return materials;
+    }
 
     @Override
     public Boolean delete(int id) {

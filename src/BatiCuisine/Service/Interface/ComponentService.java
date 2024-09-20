@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ComponentService {
-    public Component save(Component component);
-    public Component update(Component component);
+    public Labor saveLabor(Labor labor);
+    public Material saveMaterial(Material material);
     public Boolean delete(int id);
     public Optional<Component> findById(int id);
     public List<Component> findAll();
+    public List<Labor> saveAllLabors(List<Labor> labors);
+    public List<Material> saveAllMaterials(List<Material> materials);
 }
