@@ -19,10 +19,10 @@ public class ProjectManager {
     private ProjectServiceImpl projectService;
     private Scanner scanner;
     private ClientServiceImpl clientService;
-    private DateTimeFormatter dateFormatter;
     private ComponentServiceImpl componentService;
     private QuoteServiceImpl quoteService;
     private ComponentManager componentManager;
+    private QuoteManagement quoteManager;
 
     public ProjectManager() throws SQLException {
         this.projectService = new ProjectServiceImpl();
@@ -30,8 +30,8 @@ public class ProjectManager {
         this.clientService = new ClientServiceImpl();
         this.componentService = new ComponentServiceImpl();
         this.quoteService = new QuoteServiceImpl();
-        this.dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         this.componentManager = new ComponentManager();
+        this.quoteManager = new QuoteManagement();
     }
     public void createProject(String clientName) {
         Project project = new Project();
@@ -40,14 +40,13 @@ public class ProjectManager {
         String projectName = scanner.nextLine();
         project.setName(projectName);
 
-        // Fetch the client by name and set the client ID in the project
         Optional<Client> clientOptional = this.clientService.findByName(clientName);
         if (clientOptional.isPresent()) {
             Client client = clientOptional.get();
-            project.setClient(client); // Set client ID in the project
+            project.setClient(client);
         } else {
             System.out.println("Client not found! Project creation aborted.");
-            return; // Exit if client is not found
+            return;
         }
 
         List<Material> materials = this.componentManager.addMaterials();
@@ -71,10 +70,47 @@ public class ProjectManager {
         Double componentsCost = components.stream().mapToDouble(Component::calculateCost).sum();
         project.setTotalCost(componentsCost + (componentsCost * (project.getProfitMargin() / 100)));
 
+        reviewProject(project, materials, labors, componentsCost, clientOptional);
+
+       Quote quote = this.quoteManager.createQuote(project);
+        do {
+            System.out.print("Do you want to save the project (y/n) ?  ");
+        }while (!scanner.next().equalsIgnoreCase("y") && !scanner.next().equalsIgnoreCase("n"));
+
+        if (scanner.next().equalsIgnoreCase("y")) {
+            project.setProjectStatus(ProjectStatus.in_progress);
+            Project savedProject = projectService.save(project);
+
+            if (savedProject != null) {
+
+                materials.forEach(material -> material.setProject(savedProject));
+                labors.forEach(labor -> labor.setProject(savedProject));
+
+
+                this.componentService.saveAllMaterials(materials);
+                this.componentService.saveAllLabors(labors);
+
+                quote.setProject(savedProject);
+                quote.setAccepted(true);
+                this.quoteService.save(quote);
+
+                System.out.println("Project saved successfully!");
+            } else {
+                System.out.println("Failed to save the project.");
+            }
+        } else {
+            System.out.println("Project not saved!");
+        }
+    }
+
+
+    public void reviewProject(Project project, List<Material> materials, List<Labor> labors, Double componentsCost, Optional<Client> clientOptional) {
         System.out.println("--- Review Project ---");
         System.out.println("Project name: " + project.getName());
-        System.out.println("Client: " + clientOptional.get().getName());
-        System.out.println("Address: " + clientOptional.get().getAddress());
+        clientOptional.ifPresent(client -> {
+            System.out.println("Client: " + client.getName());
+            System.out.println("Address: " + client.getAddress());
+        });
 
         System.out.println("--- Cost details ---");
         System.out.println("1- Materials: ");
@@ -91,50 +127,33 @@ public class ProjectManager {
         System.out.println("Profit margin of the project: " + (project.getProfitMargin() / 100));
         Double estimatedAmount = project.getTotalCost();
         System.out.println("Total cost after profit margin: " + estimatedAmount);
-
-        System.out.println("--- Project Quotation ---");
-        Quote quote = new Quote();
-        scanner.nextLine(); // Consume leftover newline from previous input
-
-        System.out.print("Enter the issue date (dd/MM/yyyy): ");
-        String issueDate = scanner.nextLine();
-        LocalDate issueDateFormatted = LocalDate.parse(issueDate, this.dateFormatter);
-        quote.setIssueDate(issueDateFormatted);
-
-        System.out.print("Enter the validity date (dd/MM/yyyy): ");
-        String validityDate = scanner.nextLine();
-        LocalDate validityDateFormatted = LocalDate.parse(validityDate, this.dateFormatter);
-        quote.setValidityDate(validityDateFormatted);
-        quote.setEstimatedAmount(estimatedAmount);
-
-        System.out.println("Do you want to save the project? (y/n)");
-        if (scanner.nextLine().equalsIgnoreCase("y")) {
-            project.setProjectStatus(ProjectStatus.in_progress);
-            Project savedProject = projectService.save(project); // Save the project
-
-            if (savedProject != null) {
-                // Set project ID in components
-                materials.forEach(material -> material.setProject(savedProject));
-                labors.forEach(labor -> labor.setProject(savedProject));
-
-                // Save components
-                this.componentService.saveAllMaterials(materials);
-                this.componentService.saveAllLabors(labors);
-
-                // Save the quote
-                quote.setProject(savedProject);
-                quote.setAccepted(true);
-                this.quoteService.save(quote);
-
-                System.out.println("Project saved successfully!");
-            } else {
-                System.out.println("Failed to save the project.");
-            }
-        } else {
-            System.out.println("Project not saved!");
-        }
     }
 
-
-
+    public void displayAllProjects() {
+        List<Project> projects = this.projectService.findAll();
+        projects.forEach(project -> {
+            System.out.println("Project name: " + project.getName());
+            System.out.println("Client: " + project.getClient().getName());
+            System.out.println("Total cost: " + project.getTotalCost());
+            System.out.println("Profit margin: " + project.getProfitMargin());
+            System.out.println("Status: " + project.getProjectStatus());
+            int projectId = project.getId();
+            System.out.println("Project Materials: ");
+            this.componentService.projectMaterials(projectId).forEach(component -> {
+                System.out.println("- Component name: " + component.getName() + ", Component cost: " + component.calculateCost() + " DH");
+            });
+            System.out.println("Project Labors: ");
+            this.componentService.projectLabors(projectId).forEach(component -> {
+                System.out.println("- Component name: " + component.getName() + ", Component cost: " + component.calculateCost() + " DH");
+            });
+            this.quoteService.findByProjectId(projectId).ifPresent(quote -> {
+                System.out.println("Quote: ");
+                System.out.println("Quote amount: " + quote.getEstimatedAmount());
+                System.out.println("Accepted: " + quote.getAccepted());
+                System.out.println("Issue date: " + quote.getIssueDate());
+                System.out.println("Validity date: " + quote.getValidityDate());
+            });
+            System.out.println("-------------------------------------------------");
+        });
+    }
 }
