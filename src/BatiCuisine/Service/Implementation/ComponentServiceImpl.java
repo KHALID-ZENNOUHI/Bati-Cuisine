@@ -53,4 +53,14 @@ public class ComponentServiceImpl implements ComponentService {
     public List<Component> findAll() {
         return this.componentRepository.findAll();
     }
+
+    @Override
+    public List<Material> projectMaterials(int id) {
+        return this.componentRepository.projectMaterials(id);
+    }
+
+    @Override
+    public List<Labor> projectLabors(int id) {
+        return this.componentRepository.projectLabors(id);
+    }
 }

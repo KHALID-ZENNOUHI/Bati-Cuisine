@@ -6,6 +6,7 @@ import BatiCuisine.Domain.Entity.Labor;
 import BatiCuisine.Domain.Entity.Material;
 import BatiCuisine.Domain.Entity.Project;
 import BatiCuisine.Repository.Interface.ComponentRepository;
+import BatiCuisine.Service.Implementation.ClientServiceImpl;
 import BatiCuisine.Service.Implementation.ProjectServiceImpl;
 
 import java.sql.Connection;
@@ -19,10 +20,13 @@ import java.util.Optional;
 public class ComponentRepositoryImpl implements ComponentRepository {
     private final Connection connection;
     private final ProjectServiceImpl projectService;
+    private ClientServiceImpl clientService;
+
 
     public ComponentRepositoryImpl() throws SQLException {
         this.connection = DataBaseConnection.getInstance().getConnection();
         this.projectService = new ProjectServiceImpl();
+        this.clientService = new ClientServiceImpl();
     }
 
     @Override
@@ -189,5 +193,58 @@ public class ComponentRepositoryImpl implements ComponentRepository {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public List<Material> projectMaterials(int projectId) {
+        String query = "SELECT * FROM material WHERE project_id = ?";
+        List<Material> materials = new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, projectId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int componentId = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                String componentType = resultSet.getString("component_type");
+                Double VATRate = resultSet.getDouble("vat_rate");
+                int project_id = resultSet.getInt("project_id");
+                Project project = this.projectService.findById(project_id).get();
+                Double unitPrice = resultSet.getDouble("unit_cost");
+                Double quantity = resultSet.getDouble("quantity");
+                Double transportCost = resultSet.getDouble("transport_cost");
+                Double qualityCoefficient = resultSet.getDouble("quality_coefficient");
+                materials.add(new Material(componentId, name, componentType, VATRate, project, unitPrice, quantity, transportCost, qualityCoefficient));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return materials;
+    }
+
+    @Override
+    public List<Labor> projectLabors(int projectId) {
+        String query = "SELECT * FROM labor WHERE project_id = ?";
+        List<Labor> labors = new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, projectId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int componentId = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                String componentType = resultSet.getString("component_type");
+                Double VATRate = resultSet.getDouble("vat_rate");
+                int project_id = resultSet.getInt("project_id");
+                Project project = this.projectService.findById(project_id).get();
+                Double hourlyRate = resultSet.getDouble("hourly_rate");
+                Double hoursWorked = resultSet.getDouble("hours_worked");
+                Double workerProductivity = resultSet.getDouble("worker_productivity");
+                labors.add(new Labor(componentId, name, componentType, VATRate, project, hourlyRate, hoursWorked, workerProductivity));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return labors;
     }
 }

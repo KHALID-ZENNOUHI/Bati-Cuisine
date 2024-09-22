@@ -12,7 +12,5 @@ public interface ProjectService {
     public Optional<Project> findById(int id);
     public List<Project> findAll();
     public List<Project> findByClientId(int id);
-    public List<Component> projectComponents(int id);
-    public List<Material> projectMaterials(int id);
-    public List<Labor> projectLabors(int id);
+
 }

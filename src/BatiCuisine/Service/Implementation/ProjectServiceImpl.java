@@ -47,19 +47,4 @@ public class ProjectServiceImpl implements ProjectService {
     public List<Project> findByClientId(int id) {
         return this.projectRepository.findByClientId(id);
     }
-
-    @Override
-    public List<Component> projectComponents(int id) {
-        return this.projectRepository.projectComponents(id);
-    }
-
-    @Override
-    public List<Material> projectMaterials(int id) {
-        return this.projectRepository.projectMaterials(id);
-    }
-
-    @Override
-    public List<Labor> projectLabors(int id) {
-        return this.projectRepository.projectLabors(id);
-    }
 }

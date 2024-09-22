@@ -15,4 +15,6 @@ public interface ComponentRepository {
     public Boolean delete(int id);
     public Optional<Component> findById(int id);
     public List<Component> findAll();
+    public List<Material> projectMaterials(int projectId);
+    public List<Labor> projectLabors(int projectId);
 }

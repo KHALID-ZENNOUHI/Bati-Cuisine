@@ -15,4 +15,6 @@ public interface ComponentService {
     public List<Component> findAll();
     public List<Labor> saveAllLabors(List<Labor> labors);
     public List<Material> saveAllMaterials(List<Material> materials);
+    public List<Material> projectMaterials(int id);
+    public List<Labor> projectLabors(int id);
 }
