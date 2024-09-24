@@ -6,10 +6,9 @@ import BatiCuisine.Service.Implementation.ClientServiceImpl;
 import BatiCuisine.Service.Implementation.ComponentServiceImpl;
 import BatiCuisine.Service.Implementation.ProjectServiceImpl;
 import BatiCuisine.Service.Implementation.QuoteServiceImpl;
+import BatiCuisine.Util.InputValidator;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +17,7 @@ import java.util.Scanner;
 public class ProjectManager {
     private ProjectServiceImpl projectService;
     private Scanner scanner;
+    private InputValidator validator;
     private ClientServiceImpl clientService;
     private ComponentServiceImpl componentService;
     private QuoteServiceImpl quoteService;
@@ -32,12 +32,14 @@ public class ProjectManager {
         this.quoteService = new QuoteServiceImpl();
         this.componentManager = new ComponentManager();
         this.quoteManager = new QuoteManagement();
+        this.validator = new InputValidator();
     }
+
     public void createProject(String clientName) {
         Project project = new Project();
         System.out.println("--- Create Project ---");
-        System.out.print("Enter project name: ");
-        String projectName = scanner.nextLine();
+
+        String projectName = validator.validateString("Enter project name: ");
         project.setName(projectName);
 
         Optional<Client> clientOptional = this.clientService.findByName(clientName);
@@ -52,15 +54,12 @@ public class ProjectManager {
         List<Material> materials = this.componentManager.addMaterials();
         List<Labor> labors = this.componentManager.addLabor();
 
-        System.out.println("Calculate total cost:");
-        System.out.print("Enter the project VAT rate: ");
-        Double VATRate = scanner.nextDouble();
+        Double VATRate = validator.validateDouble("Enter the project VAT rate: ");
         materials.forEach(component -> component.setVATRate(VATRate));
         labors.forEach(component -> component.setVATRate(VATRate));
 
-        System.out.print("Add profit margin to the project: ");
-        Double profitMargin = scanner.nextDouble();
-        project.setProfitMargin(profitMargin);
+        Double profitMargin = validator.validateDouble("Add profit margin to the project: ");
+
 
         List<Component> components = new ArrayList<>();
         components.addAll(materials);
@@ -68,30 +67,32 @@ public class ProjectManager {
         project.setComponents(components);
 
         Double componentsCost = components.stream().mapToDouble(Component::calculateCost).sum();
-        project.setTotalCost(componentsCost + (componentsCost * (project.getProfitMargin() / 100)));
+        project.setProfitMargin((componentsCost * (profitMargin / 100)));
+        project.setTotalCost(componentsCost + project.getProfitMargin());
 
         reviewProject(project, materials, labors, componentsCost, clientOptional);
 
-       Quote quote = this.quoteManager.createQuote(project);
-        do {
-            System.out.print("Do you want to save the project (y/n) ?  ");
-        }while (!scanner.next().equalsIgnoreCase("y") && !scanner.next().equalsIgnoreCase("n"));
+        Quote quote = this.quoteManager.createQuote();
 
-        if (scanner.next().equalsIgnoreCase("y")) {
+        String saveProjectDecision;
+        do {
+            saveProjectDecision = validator.validateString("Do you want to save the project (y/n) ?  ");
+        } while (!saveProjectDecision.equalsIgnoreCase("y") && !saveProjectDecision.equalsIgnoreCase("n"));
+
+        if (saveProjectDecision.equalsIgnoreCase("y")) {
             project.setProjectStatus(ProjectStatus.in_progress);
             Project savedProject = projectService.save(project);
 
             if (savedProject != null) {
-
                 materials.forEach(material -> material.setProject(savedProject));
                 labors.forEach(labor -> labor.setProject(savedProject));
-
 
                 this.componentService.saveAllMaterials(materials);
                 this.componentService.saveAllLabors(labors);
 
                 quote.setProject(savedProject);
                 quote.setAccepted(true);
+                quote.setEstimatedAmount(savedProject.getTotalCost());
                 this.quoteService.save(quote);
 
                 System.out.println("Project saved successfully!");
@@ -102,7 +103,6 @@ public class ProjectManager {
             System.out.println("Project not saved!");
         }
     }
-
 
     public void reviewProject(Project project, List<Material> materials, List<Labor> labors, Double componentsCost, Optional<Client> clientOptional) {
         System.out.println("--- Review Project ---");
@@ -124,9 +124,8 @@ public class ProjectManager {
         });
 
         System.out.println("Total cost before profit margin: " + componentsCost);
-        System.out.println("Profit margin of the project: " + (project.getProfitMargin() / 100));
-        Double estimatedAmount = project.getTotalCost();
-        System.out.println("Total cost after profit margin: " + estimatedAmount);
+        System.out.println("Profit margin of the project: " + project.getProfitMargin());
+        System.out.println("Total cost after profit margin: " + project.getTotalCost());
     }
 
     public void displayAllProjects() {
@@ -156,4 +155,32 @@ public class ProjectManager {
             System.out.println("-------------------------------------------------");
         });
     }
+
+    public void projectDetails () {
+        String projectName = this.validator.validateString("Enter the project name: ");
+        this.projectService.findByName(projectName).ifPresentOrElse(project -> {
+            System.out.println("Project name: " + project.getName());
+            System.out.println("Client: " + project.getClient().getName());
+            System.out.println("Total cost: " + project.getTotalCost());
+            System.out.println("Profit margin: " + project.getProfitMargin());
+            System.out.println("Status: " + project.getProjectStatus());
+            int projectId = project.getId();
+            System.out.println("Project Materials: ");
+            this.componentService.projectMaterials(projectId).forEach(component -> {
+                System.out.println("- Component name: " + component.getName() + ", Component cost: " + component.calculateCost() + " DH");
+            });
+            System.out.println("Project Labors: ");
+            this.componentService.projectLabors(projectId).forEach(component -> {
+                System.out.println("- Component name: " + component.getName() + ", Component cost: " + component.calculateCost() + " DH");
+            });
+            this.quoteService.findByProjectId(projectId).ifPresent(quote -> {
+                System.out.println("Quote: ");
+                System.out.println("Quote amount: " + quote.getEstimatedAmount());
+                System.out.println("Accepted: " + quote.getAccepted());
+                System.out.println("Issue date: " + quote.getIssueDate());
+                System.out.println("Validity date: " + quote.getValidityDate());
+            });
+        }, () -> System.out.println("Project not found!"));
+    }
+
 }

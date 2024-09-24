@@ -152,7 +152,28 @@ public class ProjectRepositoryImpl implements ProjectRepository {
         return projects;
     }
 
-
+    @Override
+    public Optional<Project> findByName(String name)  {
+        String query = "SELECT * FROM project WHERE name = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                Project project = new Project();
+                project.setId(resultSet.getInt("id"));
+                project.setName(resultSet.getString("name"));
+                project.setProfitMargin(resultSet.getDouble("profit_margin"));
+                project.setTotalCost(resultSet.getDouble("total_cost"));
+                project.setProjectStatus(ProjectStatus.valueOf(resultSet.getString("project_status")));
+                project.setClient(this.clientService.findById(resultSet.getInt("client_id")).get());
+                return Optional.of(project);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
 
 
 

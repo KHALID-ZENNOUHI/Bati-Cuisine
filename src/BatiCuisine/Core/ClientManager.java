@@ -3,6 +3,7 @@ package BatiCuisine.Core;
 import BatiCuisine.Domain.Entity.Client;
 import BatiCuisine.Domain.Entity.Project;
 import BatiCuisine.Service.Implementation.ClientServiceImpl;
+import BatiCuisine.Util.InputValidator;
 
 import java.sql.SQLException;
 import java.sql.SQLOutput;
@@ -11,30 +12,31 @@ import java.util.Optional;
 import java.util.Scanner;
 
 public class ClientManager {
-    private ClientServiceImpl clientService;
-    private Scanner scanner;
+    private final ClientServiceImpl clientService;
+    private final InputValidator validator;
 
     public ClientManager() throws SQLException {
         this.clientService = new ClientServiceImpl();
-        this.scanner = new Scanner(System.in);
+        this.validator = new InputValidator();
     }
 
     public String createClient() {
-        System.out.print("Enter client name: ");
-        String name = this.scanner.nextLine();
-        System.out.print("Enter client address: ");
-        String address = this.scanner.nextLine();
-        System.out.print("Enter client phone number: ");
-        String phoneNumber = this.scanner.nextLine();
+        String name = validator.validateString("Enter client name: ");
+
+        String address = validator.validateString("Enter client address: ");
+
+        String phoneNumber = validator.validateString("Enter client phone number: ");
+
         String isPro;
         do {
-            System.out.print("Is the client a professional (y/n)? ");
-            isPro = scanner.nextLine();
+            isPro = validator.validateString("Is the client a professional (y/n)? ");
         } while (!isPro.equalsIgnoreCase("y") && !isPro.equalsIgnoreCase("n"));
 
         Boolean isProfessional = isPro.equalsIgnoreCase("y");
+
         Client client = new Client(name, address, phoneNumber, isProfessional);
         Client savedClient = clientService.save(client);
+
         if (savedClient != null) {
             System.out.println("Client created successfully with name: " + savedClient.getName());
             return savedClient.getName();
@@ -42,13 +44,13 @@ public class ClientManager {
             System.out.println("Error creating client.");
             return null;
         }
-
     }
 
     public String searchClient() {
-        System.out.print("Enter client name: ");
-        String name = this.scanner.nextLine();
+        String name = validator.validateString("Enter client name: ");
+
         Optional<Client> clientOptional = clientService.findByName(name);
+
         if (clientOptional.isPresent()) {
             Client client = clientOptional.get();
             System.out.println("Client found!\n" +
@@ -62,52 +64,67 @@ public class ClientManager {
         }
     }
 
-    public void updateClient () {
-        System.out.print("Enter client name you want to update there info: ");
-        String name = this.scanner.nextLine();
+    public void updateClient() {
+        String name = validator.validateString("Enter the client name you want to update: ");
+
         Client client = clientService.findByName(name).orElse(null);
+
         if (client != null) {
-            System.out.print("Enter the new name of client: ");
-            String newName =  this.scanner.nextLine();
-            System.out.print("Enter the new client address: ");
-            String address = this.scanner.nextLine();
-            System.out.print("Enter the new client phone number: ");
-            String phoneNumber = this.scanner.nextLine();
+            String newName = validator.validateString("Enter the new name of client: ");
+            String address = validator.validateString("Enter the new client address: ");
+            String phoneNumber = validator.validateString("Enter the new client phone number: ");
+
             String isPro;
             do {
-                System.out.print("Is the client a professional (y/n)? ");
-                isPro = scanner.nextLine();
+                isPro = validator.validateString("Is the client a professional (y/n)? ");
             } while (!isPro.equalsIgnoreCase("y") && !isPro.equalsIgnoreCase("n"));
 
             Boolean isProfessional = isPro.equalsIgnoreCase("y");
-            Client newClient = new Client(name, address, phoneNumber, isProfessional);
+
+            Client newClient = new Client(newName, address, phoneNumber, isProfessional);
             clientService.update(newClient);
-            System.out.println("Client created successfully!");
+
+            System.out.println("Client updated successfully!");
+        } else {
+            System.out.println("Client not found.");
         }
     }
 
-    public void deleteClient () {
-        System.out.print("Enter the name of the client you want to delete : ");
-        String name = this.scanner.nextLine();
+    public void deleteClient() {
+        String name = validator.validateString("Enter the name of the client you want to delete: ");
+
         Optional<Client> clientOptional = clientService.findByName(name);
+
         if (clientOptional.isPresent()) {
             Client client = clientOptional.get();
-            int id =  client.getId();
+            int id = client.getId();
+
             Boolean isDeleted = clientService.delete(id);
-            if (isDeleted) System.out.println("The client with the name" + name + "is deleted successfully!");
-            else System.out.println("An error occurred on the delete of the client! ");
+
+            if (isDeleted) {
+                System.out.println("The client with the name " + name + " is deleted successfully!");
+            } else {
+                System.out.println("An error occurred while deleting the client.");
+            }
         } else {
             System.out.println("There is no client with the name: " + name);
         }
     }
 
     public void getClientProjects() {
-        System.out.println("Enter the name of the client you want there project: ");
-        String name  = this.scanner.nextLine();
+        String name = validator.validateString("Enter the name of the client to view their projects: ");
+
         Optional<Client> clientOptional = clientService.findByName(name);
-        if (clientOptional.isPresent()){
-            Client  client = clientOptional.get();
+
+        if (clientOptional.isPresent()) {
+            Client client = clientOptional.get();
+
             clientService.clientProjects(client.getId()).forEach(System.out::println);
+        } else {
+            System.out.println("Client not found.");
         }
     }
+
+
+
 }

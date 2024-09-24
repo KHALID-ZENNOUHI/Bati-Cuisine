@@ -39,6 +39,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public Optional<Project> findByName(String name) {
+        return this.projectRepository.findByName(name);
+    }
+
+    @Override
     public List<Project> findAll() {
         return this.projectRepository.findAll();
     }

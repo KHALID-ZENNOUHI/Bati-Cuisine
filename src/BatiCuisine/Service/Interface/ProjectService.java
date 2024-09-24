@@ -10,6 +10,7 @@ public interface ProjectService {
     public Project update(Project project);
     public Boolean delete(int id);
     public Optional<Project> findById(int id);
+    public Optional<Project> findByName(String name);
     public List<Project> findAll();
     public List<Project> findByClientId(int id);
 

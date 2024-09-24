@@ -1,6 +1,5 @@
 package BatiCuisine;
 
-import BatiCuisine.Config.DataBaseConnection;
 import BatiCuisine.Core.ClientManager;
 import BatiCuisine.Core.ProjectManager;
 
@@ -19,7 +18,8 @@ public class Main {
 
             System.out.println("    -> 1. Create a new project");
             System.out.println("    -> 2. Display all projects");
-            System.out.println("    -> 3. Exit");
+            System.out.println("    -> 3. Project Details");
+            System.out.println("    -> 4. Exit");
 
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
@@ -36,7 +36,7 @@ public class Main {
                     do {
                         System.out.print("Enter your choice: ");
                         clientChoice = scanner.nextInt();
-                        scanner.nextLine(); // Consume the newline
+                        scanner.nextLine();
                     } while (clientChoice != 1 && clientChoice != 2);
 
                     if (clientChoice == 1) {
@@ -58,6 +58,11 @@ public class Main {
                     break;
 
                 case 3:
+                    System.out.println("Project Details...");
+                    projectManager.projectDetails();
+                    break;
+
+                case 4:
                     System.out.println("Exiting...");
                     System.exit(0);
                     break;
