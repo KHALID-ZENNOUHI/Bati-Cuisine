@@ -41,13 +41,12 @@ The program includes advanced features such as client management, generation of 
 
 - Java 8+
 - PostgreSQL database
-- Maven or Gradle (for dependency management)
 
 ## Setup and Installation
 
 1. Clone the repository:
    ```
-   git clone https://github.com/your-username/bati-cuisine.git
+   git clone https://github.com/KHALID-ZENNOUHI/Bati-Cuisine.git
    ```
 
 2. Navigate to the project directory:
@@ -59,14 +58,10 @@ The program includes advanced features such as client management, generation of 
    - Create a new database named `bati_cuisine`
    - Update the `application.properties` file with your database credentials
 
-4. Build the project:
-   ```
-   mvn clean install
-   ```
 
-5. Run the application:
+4. Run the application:
    ```
-   java -jar target/bati-cuisine.jar
+   java -jar bati-cuisine.jar
    ```
 
 ## Usage
