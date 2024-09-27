@@ -75,6 +75,26 @@ public class InputValidator {
         }
     }
 
+    public int validateIntegerInRange(String prompt, int min, int max) {
+        int number;
+        while (true) {
+            System.out.print(prompt);
+            try {
+                number = scanner.nextInt();
+                scanner.nextLine();
+
+                if (number >= min && number <= max) {
+                    return number;
+                } else {
+                    System.out.println("Invalid input! Please enter a number between " + min + " and " + max + ".");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input! Please enter a valid integer.");
+                scanner.next();
+            }
+        }
+    }
+
     public Double validateDoubleInRange(String prompt, Double min, Double max) {
         double number;
         while (true) {

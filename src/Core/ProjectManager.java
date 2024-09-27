@@ -61,6 +61,7 @@ public class ProjectManager {
         Double profitMargin = validator.validateDouble("Add profit margin to the project: ");
 
 
+
         List<Component> components = new ArrayList<>();
         components.addAll(materials);
         components.addAll(labors);
@@ -68,6 +69,17 @@ public class ProjectManager {
 
         Double componentsCost = components.stream().mapToDouble(Component::calculateCost).sum();
         project.setProfitMargin((componentsCost * (profitMargin / 100)));
+        String choice;
+        if (project.getClient().getProfessional()) {
+            do {
+                choice = this.validator.validateString("The client is professional would you like to apply a discount (y/n): ");
+            }while (!choice.equalsIgnoreCase("y") && !choice.equalsIgnoreCase("n"));
+            if (choice.equalsIgnoreCase("y")){
+                Double discount  = this.validator.validateDoubleInRange("enter the discount (between 0% and 100 % of profit margin): ", 0.0, 100.0);
+                Double newProfitMargin = project.getProfitMargin() - (project.getProfitMargin()*discount / 100);
+                project.setProfitMargin(newProfitMargin);
+            }
+        }
         project.setTotalCost(componentsCost + project.getProfitMargin());
 
         reviewProject(project, materials, labors, componentsCost, clientOptional);

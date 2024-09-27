@@ -1,6 +1,7 @@
 
 import Core.ClientManager;
 import Core.ProjectManager;
+import Util.InputValidator;
 
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -10,6 +11,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         ProjectManager projectManager = new ProjectManager();
         ClientManager clientManager = new ClientManager();
+        InputValidator validator = new InputValidator();
 
         while (true) {
             System.out.println("<--------BatiCuisine Project Management-------->");
@@ -20,9 +22,8 @@ public class Main {
             System.out.println("    -> 3. Project Details");
             System.out.println("    -> 4. Exit");
 
-            System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+
+            int choice = validator.validateIntegerInRange("Enter your choice: ", 1, 4);
 
             switch (choice) {
                 case 1:
@@ -33,9 +34,9 @@ public class Main {
                     int clientChoice;
 
                     do {
-                        System.out.print("Enter your choice: ");
-                        clientChoice = scanner.nextInt();
-                        scanner.nextLine();
+
+                        clientChoice = validator.validateIntegerInRange("Enter your choice: ", 1, 2);
+
                     } while (clientChoice != 1 && clientChoice != 2);
 
                     if (clientChoice == 1) {
